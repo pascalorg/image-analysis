@@ -16,7 +16,10 @@ npx skills add pascalorg/skills --skill image-analysis
 
 | Skill | Description |
 |-------|-------------|
-| [image-analysis](./image-analysis) | Extract color palettes from images (screenshots, Figma exports, design mockups) to help implement matching UI |
+| [image-analysis](./image-analysis) | Extract color palettes from images (screenshots, Figma exports, design mockups) |
+| [image-compare](./image-compare) | Pixel-by-pixel diff of two images with mismatch percentage and visual diff output |
+| [image-to-text](./image-to-text) | OCR — extract text, labels, and UI copy from screenshots and design mockups |
+| [contrast-check](./contrast-check) | Check color pairs against WCAG AA/AAA accessibility standards |
 
 ## License
 
