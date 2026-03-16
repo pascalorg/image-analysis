@@ -1236,11 +1236,42 @@ export function AppShell({ nav, children }) {
 - Avoid content that flashes more than 3 times per second (seizure risk).
 - Allow users to pause any auto-playing content.
 
-### Touch Targets
+### Touch Targets & Hit Areas
 
-- **Minimum touch target: 44x44px** (WCAG), 48x48px preferred (Material Design).
+- **Minimum touch target: 44×44px** (WCAG), 48×48px preferred (Material Design).
 - Separate interactive elements by at least 8px to prevent accidental taps.
-- **Expand hit areas beyond visual size** using `::before` pseudo-elements positioned absolutely.
+- **Expand hit areas beyond visual size** using pseudo-elements positioned absolutely — this doesn't affect layout:
+
+```css
+/* Small checkbox (20×20) with expanded 44×44 hit area */
+.checkbox {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+.checkbox::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+}
+```
+
+Tailwind equivalent:
+
+```html
+<button class="relative size-5 after:absolute after:top-1/2 after:left-1/2 after:size-11 after:-translate-1/2">
+  <CheckIcon />
+</button>
+```
+
+- **Collision rule:** If an expanded hit area overlaps another interactive element, shrink it — but keep it as large as possible without colliding. Two interactive elements must never have overlapping hit areas.
+- **Eliminate interaction dead zones.** Common problem: a checkbox in a table cell has padding around it, but only the tiny checkbox is clickable. Expand the hit area to fill the entire cell so clicking anywhere in the padded area works.
+- **Bridge visual gaps in navigation.** Sidebar nav items with `gap-y-px` look separated but should feel continuous — expand hit areas to cover the gaps so there are no dead spots between items.
+- **Use `hit-area` utilities** ([bazza.dev/r/hit-area](https://bazza.dev/r/hit-area)) for a Tailwind-native approach. Install via `npx shadcn@latest add https://bazza.dev/r/hit-area`. Supports uniform (`hit-area-4`), directional (`hit-area-l-8 hit-area-r-4`), axis (`hit-area-x-4 hit-area-y-6`), and custom (`hit-area-[21px]`) expansion. Use `hit-area-debug` to visualize during development.
 
 ---
 
