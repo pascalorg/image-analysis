@@ -921,6 +921,22 @@ See the full token set in [Section 3: In Practice](#in-practice-shadcnui-theming
 - **Prevent errors rather than reporting them.** Use constraints, good defaults, and real-time validation.
 - **Placeholder is not a label.** Placeholders disappear on focus. Use floating labels or persistent labels above the field.
 - **Apply `autocomplete` attributes** for familiar fields (name, email, address).
+- **Tame Chrome's autofill styling.** Chrome forces a blue background and overrides text color on autofilled inputs via `:-webkit-autofill` with `!important` at the user-agent level. Tailwind's `autofill:` variant alone can't override it. Use this global rule:
+
+```css
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px var(--background) inset !important;
+  -webkit-text-fill-color: var(--foreground) !important;
+  border-color: var(--input) !important;
+  transition: background-color 5000s ease-in-out 0s;
+  caret-color: var(--foreground);
+}
+```
+
+  The inset box-shadow covers Chrome's blue background. `-webkit-text-fill-color` forces your text color (regular `color` gets overridden). The `transition: background-color 5000s` delays Chrome's background change indefinitely. Target all four states (base, hover, focus, active) or Chrome re-applies its styles on interaction. **Caveat:** the 5000s transition delay means autofilled backgrounds won't update on live theme switches (light/dark toggle) — only affects sites with runtime theme toggling.
 
 ### Icons
 
