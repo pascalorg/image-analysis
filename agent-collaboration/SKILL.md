@@ -501,20 +501,17 @@ Configure the providers you use. You don't need all of them — pick what matche
 
 #### Agent Definitions
 
-Place agent definition files in `.opencode/agents/` (project-level) or `~/.config/opencode/agents/` (global). Files are provided in the `agents/opencode/` directory of this skill — copy them to your agents directory:
+Agent definitions are generated from canonical templates using the setup script. Run from the skill directory:
 
 ```bash
-# Find where the skill was installed (adjust if using a different install method)
-SKILL_DIR=$(npx skills path pascalorg/skills/agent-collaboration 2>/dev/null || echo ".")
-
 # Project-level (recommended)
-mkdir -p .opencode/agents
-cp -r "$SKILL_DIR/agents/opencode/"*.md .opencode/agents/
+sh agents/setup.sh opencode
 
-# Or global
-mkdir -p ~/.config/opencode/agents
-cp -r "$SKILL_DIR/agents/opencode/"*.md ~/.config/opencode/agents/
+# Or specify a custom target directory
+sh agents/setup.sh opencode ~/.config/opencode/agents
 ```
+
+This generates 7 agent `.md` files with the correct OpenCode frontmatter (`model: provider/id`, `permission: edit: deny`) in `.opencode/agents/`.
 
 Each agent uses a different provider/model. OpenCode routes to the correct provider automatically based on the model prefix.
 
@@ -609,13 +606,13 @@ All agents use Anthropic models. You lose cross-family adversarial review but ga
 
 **Limitation:** Adversarial review from the same model family is less effective. The adversarial reviewer using Sonnet with a strong adversarial prompt partially compensates, but same-family blind spots persist.
 
-**Agent definition files:** Copy from `agents/claude-code/` to `.claude/agents/` or `~/.claude/agents/`:
+**Agent definition files:** Generate from canonical templates using the setup script:
 
 ```bash
-SKILL_DIR=$(npx skills path pascalorg/skills/agent-collaboration 2>/dev/null || echo ".")
-mkdir -p .claude/agents
-cp -r "$SKILL_DIR/agents/claude-code/"*.md .claude/agents/
+sh agents/setup.sh claude-code
 ```
+
+This generates 7 agent `.md` files with Anthropic-specific frontmatter (`model: opus/sonnet`, `allowed-tools`, `effort`) in `.claude/agents/`.
 
 #### Approach 2: With OpenRouter Gateway
 
